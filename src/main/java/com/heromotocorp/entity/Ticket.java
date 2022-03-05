@@ -1,16 +1,23 @@
 package com.heromotocorp.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+@Entity
+@Table(name = "ticket")
 public class Ticket {
 
-	private Integer id;
+	private Integer ticketId;
 
 	private String category;
 
@@ -30,15 +37,14 @@ public class Ticket {
 	}
 
 	@Id
-	@Column(length = 5, name = "id", nullable = false, updatable = false)
+	@Column(length = 5, name = "ticket_id", nullable = false, updatable = false, insertable = false)
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@SequenceGenerator(allocationSize = 1, sequenceName = "h2_seq_ticket", name = "seq_id")
-	public Integer getId() {
-		return id;
+	public Integer getTicketId() {
+		return ticketId;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setTicketId(Integer ticketId) {
+		this.ticketId = ticketId;
 	}
 
 	@Column(length = 10, name = "category", nullable = false)
@@ -68,8 +74,9 @@ public class Ticket {
 		this.status = status;
 	}
 
-	@ManyToOne
-	@JoinColumn(name = "id", nullable = true)
+	@ManyToOne(optional = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "user_id")
+	@JsonBackReference
 	public User getUser() {
 		return user;
 	}
